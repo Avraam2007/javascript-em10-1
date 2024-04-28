@@ -5,16 +5,9 @@ const readline = require('readline').createInterface({
 
   readline.question("Enter your number: ", (numb) => {
     numb = Math.floor(numb);
-    if (isNaN(numb)){
+    if (isNaN(numb))
         console.error("This value isn't integer");
-    }
-    else {
-        if (numb % 2 == 1) {
-            console.log(`${numb} is odd`);
-        }
-        else {
-            console.log(`${numb} is even`);
-        }
-    }
+    else
+        numb%2 == 1 ? console.log(`${numb} is odd`) : console.log(`${numb} is even`);
       readline.close();
     });

@@ -4,17 +4,11 @@ const readline = require('readline').createInterface({
   });
 
   readline.question("Enter your password: ", (password) => {
-    if(password.length < 8) {
+    if(password.length < 8)
         console.log("The password is too short");
-    }
-    
-    else if(password.length > 16) {
+    else if(password.length > 16)
         console.log("The password is too long");
-    }
-    
-    else{
+    else
         console.log(`Your password: ${"*".repeat(password.length)}`);
-    }
       readline.close();
     });
-

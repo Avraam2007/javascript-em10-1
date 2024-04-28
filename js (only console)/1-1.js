@@ -7,21 +7,15 @@ const readline = require('readline').createInterface({
     a = Math.floor(a);
     readline.question("Enter second number: ", (b) => {
         b = Math.floor(b);
-        if (isNaN(a) || isNaN(b)){
+        if (isNaN(a) || isNaN(b))
             console.error("One of this numbers is not integer");
-        }
         else {
-            if (a > b) {
+            if (a > b)
                 console.log(`${a} is bigger than ${b}`);
-            }
-        
-            else if (a < b) {
+            else if (a < b)
                 console.log(`${b} is bigger than ${a}`);
-            }
-        
-            else {
+            else
                 console.log(`${b} = ${a}`);
-            }
     }
       readline.close();
     });

@@ -1,4 +1,4 @@
-let year = Math.floor(prompt("Enter your number: "));
+let year = Math.floor(prompt("Enter your year: "));
 
 if (isNaN(year)){
     console.error("This value isn't integer");

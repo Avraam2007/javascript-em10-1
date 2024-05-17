@@ -19,5 +19,4 @@ function nameSorting(newTracks) {
     return newTracks.sort((a,b) => {return b.name.length - a.name.length;});
 }
 
-console.log(timeSorting(trackArray(bands)));
-console.log(nameSorting(trackArray(bands)));
+console.log(`${timeSorting(trackArray(bands))}\n${nameSorting(trackArray(bands))}`);

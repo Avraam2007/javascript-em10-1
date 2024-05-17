@@ -14,22 +14,17 @@ let min = [];
 
 newTracks.forEach((item)=>{
     maxDur = 0
+    minDur = 0
     item.forEach((item1)=>{
         if(item1.duration > maxDur){
             maxDur = item1.duration;
         };
-    });
-    max.push(maxDur);
-});
-
-newTracks.forEach((item)=>{
-    minDur = 0
-    item.forEach((item1)=>{
-        if(item1.duration < minDur){
+        else if(item1.duration < minDur){
             minDur = item1.duration;
         };
     });
-    min.push(maxDur);
+    max.push(maxDur);
+    min.push(minDur);
 });
 
 const newTracks1 = [];

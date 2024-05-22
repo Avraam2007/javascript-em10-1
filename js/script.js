@@ -1,126 +1,345 @@
-// 1
+const responce = await fetch('../json/n_bands.json');
+const bands = await responce.json();
 
-function setComment(nickname, date, isVerified, starRate, desc, pros, cons, isLike = false, isDislike = false, seller = "Rozetka" ) {
-    if (isNaN(parseInt(starRate)))
-        starRate = 0;
-    else
-        starRate = parseInt(starRate % 6);
-    const Comm = {
-        nickname: nickname,
-        date: new Date(date),
-        isVerified : Boolean(isVerified),
-        seller : seller,
-        starRate: starRate,
-        desc : desc,
-        pros : pros,
-        cons: cons, 
-        isLike : Boolean(isLike),
-        isDislike : Boolean(isDislike),
-        like_btn: function() {
-            Comm.isLike = !Comm.isLike;
-        },
-        dislike_btn: function() {
-            Comm.isDislike = !Comm.isDislike;
-        },
+function minSec(sec) {
+    let secFormula = sec-Math.floor(sec/60)*60;
+    return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} s`}`;
+}
+
+function elOrder(band, isFirstFirst) {
+    let first = `
+    <div class="first">
+        <div class="logo" style="background: url(${band.icon != '' ? band.icon : `https://placehold.co/400?text=${band.bandName.replace(" ", "+")}`}); background-size: 100%; background-position: center; background-repeat: no-repeat;"></div>
+        <h2 class="band-name" style="text-align:center;">${band.bandName}</h2>
+    </div>
+    `;
+    let participantsSort = band.participants.filter(name => name != band.soloist && name != "").join(', ');
+    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item.name != "" && item.duration != 0);
+    let second = `
+    <div class="second">
+        <h2 class="soloist name">Soloist: ${band.soloist}</h2>
+        <p class="participants">Participants: ${(participantsSort != null && participantsSort != "") ? participantsSort : "Only solo"}</p>
+        <div class="tracks">
+            <h3 class="tracks-title">Tracks:</h3>
+            <ul class="tracks-list">${trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('')}</ul>
+        </div>
+    </div>
+    `;
+    
+    if (isFirstFirst) {
+        return `${first}${second}`;
     }
-    return Comm;
-}
-
-function printComment(object1) {
-    console.log(object1);
-}
-
-const Comment1 = setComment("Станіслав Дегтярів", "January 28, 2024", true, 5, "Комп'ютер прийшов цілим та неушкодженним", "Гарний комп'ютер за свої гроші", "не виявив");
-printComment(Comment1);
-const Comment2 = setComment("Микола Парасюк", "May 06, 2022", false, 4654648, "Чудовий товар!", "Все добре", "Не виявив");
-Comment2.like_btn();
-printComment(Comment2);
-// const Comment3 = setComment(prompt("Enter name"), prompt("Enter name. Example: May 06, 2022"), prompt("Is verified?"), prompt("Enter star rate"), prompt("Enter review"), prompt("Enter pros"), prompt("Enter cons"), prompt("Is liked?"), prompt("Is disliked?"), prompt("Enterseller of the product: "));
-// printComment(Comment3);
-
-
-// 2
-
-const products =  [
-    {
-        id: 1,
-        name: "Ноутбук",
-        description: "хороший ноутбук",
-        data: [{price: 12883.0, sale: 10}, {price: 22723.0, sale: 7}, {price: 11000.0, sale: 17}]
-    },
-    {
-        id: 2,
-        name: "Смартфон",
-        description: "такий собі смартфон ноутбук",
-        data: [{price: 2455.0, sale: 6}, {price: 2223.0, sale: 7}, {price: 5110.0, sale: 6}]
-    },
-    {
-        id: 3,
-        name: "Павербанк",
-        description: "Просто павербанк",
-        data: [{price: 455.0, sale: 6}, {price: 623.0, sale: 17}, {price: 810.0, sale: 20}]
-    },
-    {
-        id: 4,
-        name: "Сканер",
-        description: "Крутий сканер",
-        data: [{price: 855.0, sale: 19}, {price: 777.0, sale: 10}, {price: 510.0, sale: 10}]
+    else {
+        return `${second}${first}`;
     }
-];
+}
 
-function justSum(index) {
-    let sum = 0;
-    for (let i = 0; i < products[index].data.length; i++) {
-        sum += products[index].data[i].price;
+function createItem(band, index) {
+    let htmlBlock = `
+    <div class="band-info">
+        ${elOrder(band, (index % 2 == 0 ? true : false))}
+    </div>
+    `;
+    return htmlBlock;
+}
+
+const block = document.createElement('main');
+block.classList.add('content');
+
+block.innerHTML = bands.map((band, index) => createItem(band, index)).join('<br>');
+document.body.appendChild(block);
+
+const styles = document.createElement('style');
+styles.classList.add('style');
+
+styles.innerHTML = `
+    * {
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
     }
-    return sum.toFixed(2)
-}
 
-function withSaleSum(index) {
-    let sum = 0;
-    for (let i = 0; i < products[index].data.length; i++) {
-        sum += products[index].data[i].price * (1-((products[index].data[i].sale) / 100));
+    p {
+        font-weight: 400;
+        font-size: 24px;
     }
-    return sum.toFixed(2)
-}
 
-for (let i = 0; i < products.length; i++) {
-    console.log(`\nEntity ${i+1}: \n Sum without sale: ${justSum(i)} \n Sum with sale: ${withSaleSum(i)} \n`);
-}
+    h2 {
+        font-size: 36px;
+    }
 
-// 3
+    h3 {
+        font-size: 28px;
+    }
+  
+    a {
+        text-decoration: none;
+        color: inherit;
+        transition: 0.2s;
+        cursor: pointer;
+    }
 
-const person = {
-    name : "Sherlock",
-    surname: "Holmes",
-    date_born: 1854,
-    date_death: undefined,
-    nationality: "British",
-    sex: "male",
-    height: "tall",
-    isMarried: false,
-    address_town: "Lonodn",
-    address_street: "Baker Street",
-    address_number: "221B",
-    address: `${this.address_town}, ${this.address_street}, ${this.address_number}`,
-    job: "Private detective",
-    brother: "Mycroft Holmes",
-    plus: ["clever", "brave", "honest", "wise", "problem solving skill", "hard-working", "fair"],
-    bad_habit: ["smoking", "drugs"],
-    friends: ["Dr. Watson", "clients", "detectives", "Peter John", "policemans"],
-    children: null,
-    literature_skill : false,
-    philosophy_skill : false,
-    astronomy_skill: false,
-    politics_skill: true,
-    botanique_skill: false,
-    geology_skill: true,
-    chemistry_skill: true,
-    anatomy_skill: true,
-    criminalistics_skill: true,
-    cryptology_skill: true,
-    psychology_skill: true,
-    languages: ["English", "Latin"],
-    hobbies: ["violin", "boxing", "music", "fencing", "chess", "chemical experiments"],
-    weapon: ["pistols", "knout", "sword", "singlestick", "bare-knuckle"],
-}
+    body {
+        height: 2800px;
+        background-color: #ffffef
+    }
+
+    main {
+        width: 100%; 
+        height: 2800px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .band-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 90%;
+        height: 520px;
+        background: linear-gradient(to bottom, rgba(189,195,199,1) 20%, rgba(150,166,179,1) 69%, rgba(135,158,181,1) 100%);
+        border-radius: 10px;
+        transition: 0.5s;
+    }
+
+    .band-info:hover {
+        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .first {
+        width: 400px;
+        height: 460px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        border-radius: 3px;
+        width: 400px; 
+        height: 400px; 
+    }
+
+    .second {
+        width: 60%;
+        height: 460px;
+    }
+
+    .tracks {
+        position: relative;
+        top: 40px;
+    }
+
+    .tracks-list {
+        list-style: url(https://img.icons8.com/?size=15&id=apInxpMsS4Iq&format=png&color=000000);
+    }
+
+    @media(max-width: 1200px) {
+        p {
+            font-weight: 400;
+            font-size: 18px;
+        }
+    
+        h2 {
+            font-size: 24px;
+        }
+    
+        h3 {
+            font-size: 20px;
+        }
+    
+        body {
+            height: 2500px;
+        }
+    
+        main {
+            height: 2500px;
+        }
+    
+        .band-info {
+            width: 90%;
+            height: 400px;
+            padding: 10px;
+        }
+    
+        .band-info:focus {
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+    
+        .first {
+            width: 300px;
+            height: 360px;
+        }
+    
+        .logo {
+            width: 300px; 
+            height: 300px; 
+        }
+    
+        .second {
+            width: 60%;
+            height: 360px;
+        }
+    }
+
+    @media(max-width: 768px) {
+        p {
+            font-weight: 400;
+            font-size: 16px;
+        }
+    
+        h2 {
+            font-size: 28px;
+        }
+    
+        h3 {
+            font-size: 24px;
+        }
+    
+        body {
+            height: 2300px;
+        }
+    
+        main {
+            height: 2300px;
+        }
+    
+        .band-info {
+            width: 90%;
+            height: 400px;
+        }
+    
+        .band-info:focus {
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+    
+        .first {
+            width: 250px;
+            height: 320px;
+            display: flex;
+        }
+    
+        .logo {
+            width: 250px; 
+            height: 250px; 
+        }
+    
+        .second {
+            width: 60%;
+            height: 360px;
+        }
+    }
+
+    @media(max-width: 600px) {
+        p {
+            font-weight: 400;
+            font-size: 16px;
+        }
+    
+        h2 {
+            font-size: 28px;
+        }
+    
+        h3 {
+            font-size: 24px;
+        }
+    
+        body {
+            height: 5200px;
+        }
+    
+        main {
+            height: 5200px;
+        }
+    
+        .band-info {
+            width: 90%;
+            height: 950px;
+            flex-direction: column;
+        }
+
+        .band-info:nth-of-type(even) {
+            background-color: #000;
+            flex-direction: column-reverse;
+        }
+    
+        .band-info:focus {
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+    
+        .first {
+            width: 400px;
+            height: 460px;
+            display: flex;
+        }
+    
+        .logo {
+            width: 400px; 
+            height: 400px; 
+        }
+    
+        .second {
+            width: 90%;
+            height: 350px;
+        }
+    }
+
+    @media(max-width: 450px) {
+        p {
+            font-weight: 400;
+            font-size: 14px;
+        }
+    
+        h2 {
+            font-size: 24px;
+        }
+    
+        h3 {
+            font-size: 20px;
+        }
+    
+        body {
+            height: 3200px;
+        }
+    
+        main {
+            height: 3200px;
+        }
+    
+        .band-info {
+            width: 90%;
+            height: 700px;
+            flex-direction: column;
+        }
+
+        .band-info:nth-of-type(even) {
+            background-color: #000;
+            flex-direction: column-reverse;
+        }
+    
+        .band-info:focus {
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+    
+        .first {
+            width: 270px;
+            height: 350px;
+            display: flex;
+        }
+    
+        .logo {
+            width: 240px; 
+            height: 240px; 
+        }
+    
+        .second {
+            width: 90%;
+            height: 350px;
+        }
+    }
+`;
+document.body.appendChild(styles);

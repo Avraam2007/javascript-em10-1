@@ -1,5 +1,5 @@
 const responce = await fetch('../json/n_bands.json');
-const bands = await responce.json();
+const data = await responce.json();
 
 function minSec(sec) {
     let secFormula = sec-Math.floor(sec/60)*60;
@@ -13,12 +13,12 @@ function elOrder(band, isFirstFirst) {
         <h2 class="band-name" style="text-align:center;">${band.bandName}</h2>
     </div>
     `;
-    let participantsSort = band.participants.filter(name => name != band.soloist && name != "").join(', ');
-    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item.name != "" && item.duration != 0);
+    let participantsSort = band.participants.filter(name => name != band.soloist && name.replace(" ", "") != "").join(', ');
+    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.replace(" ", "") != "" && item.duration != 0);
     let second = `
     <div class="second">
         <h2 class="soloist name">Soloist: ${band.soloist}</h2>
-        <p class="participants">Participants: ${(participantsSort != null && participantsSort != "") ? participantsSort : "Only solo"}</p>
+        <p class="participants">Participants: ${(participantsSort != null && participantsSort.replace(" ", "") != "") ? participantsSort : "Only solo"}</p>
         <div class="tracks">
             <h3 class="tracks-title">Tracks:</h3>
             <ul class="tracks-list">${trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('')}</ul>
@@ -35,18 +35,17 @@ function elOrder(band, isFirstFirst) {
 }
 
 function createItem(band, index) {
-    let htmlBlock = `
+    return `
     <div class="band-info">
         ${elOrder(band, (index % 2 == 0 ? true : false))}
     </div>
     `;
-    return htmlBlock;
 }
 
 const block = document.createElement('main');
 block.classList.add('content');
 
-block.innerHTML = bands.map((band, index) => createItem(band, index)).join('<br>');
+block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>');
 document.body.appendChild(block);
 
 const styles = document.createElement('style');
@@ -191,15 +190,7 @@ styles.innerHTML = `
             font-weight: 400;
             font-size: 16px;
         }
-    
-        h2 {
-            font-size: 28px;
-        }
-    
-        h3 {
-            font-size: 24px;
-        }
-    
+
         body {
             height: 2300px;
         }
@@ -212,42 +203,19 @@ styles.innerHTML = `
             width: 90%;
             height: 400px;
         }
-    
-        .band-info:focus {
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-        }
-    
+
         .first {
             width: 250px;
             height: 320px;
-            display: flex;
         }
     
         .logo {
             width: 250px; 
             height: 250px; 
         }
-    
-        .second {
-            width: 60%;
-            height: 360px;
-        }
     }
 
     @media(max-width: 600px) {
-        p {
-            font-weight: 400;
-            font-size: 16px;
-        }
-    
-        h2 {
-            font-size: 28px;
-        }
-    
-        h3 {
-            font-size: 24px;
-        }
-    
         body {
             height: 5200px;
         }
@@ -265,10 +233,6 @@ styles.innerHTML = `
         .band-info:nth-of-type(even) {
             background-color: #000;
             flex-direction: column-reverse;
-        }
-    
-        .band-info:focus {
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
         }
     
         .first {
@@ -303,26 +267,17 @@ styles.innerHTML = `
         }
     
         body {
-            height: 3200px;
+            height: 3700px;
         }
     
         main {
-            height: 3200px;
+            height: 3700px;
         }
     
         .band-info {
             width: 90%;
             height: 700px;
             flex-direction: column;
-        }
-
-        .band-info:nth-of-type(even) {
-            background-color: #000;
-            flex-direction: column-reverse;
-        }
-    
-        .band-info:focus {
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
         }
     
         .first {
@@ -334,11 +289,6 @@ styles.innerHTML = `
         .logo {
             width: 240px; 
             height: 240px; 
-        }
-    
-        .second {
-            width: 90%;
-            height: 350px;
         }
     }
 `;

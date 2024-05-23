@@ -1,23 +1,26 @@
 const responce = await fetch('../json/n_bands.json');
-const data = await responce.json();
+const bands = await responce.json();
+const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
 
 function minSec(sec) {
     let secFormula = sec-Math.floor(sec/60)*60;
-    return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} s`}`;
+    return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} sec`}`;
 }
 
 function elOrder(band, isFirstFirst) {
     let first = `
     <div class="first">
-        <div class="logo" style="background: url(${band.icon != '' ? band.icon : `https://placehold.co/400?text=${band.bandName.replace(" ", "+")}`}); background-size: 100%; background-position: center; background-repeat: no-repeat;"></div>
-        <h2 class="band-name" style="text-align:center;">${band.bandName}</h2>
+        <div class="cover">
+            <div class="logo" style="background: url(${band.icon != '' ? band.icon : `https://placehold.co/400?text=${band.bandName.replace(" ", "+")}`}); background-size: 100%; background-position: center; background-repeat: no-repeat;"></div>
+        </div>
+        <h2 class="band-name" style="text-align:center;">${band.bandName != null && band.bandName.replace(" ", "") != "" ? band.bandName : "No data"}</h2>
     </div>
     `;
     let participantsSort = band.participants.filter(name => name != band.soloist && name.replace(" ", "") != "").join(', ');
-    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.replace(" ", "") != "" && item.duration != 0);
+    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.replace(" ", "") != "" && item.duration != 0 && item.duration.constructor === Number);
     let second = `
     <div class="second">
-        <h2 class="soloist name">Soloist: ${band.soloist}</h2>
+        <h2 class="soloist name">Soloist: ${band.soloist != null && band.soloist.replace(" ", "") != "" ? band.soloist : "No data"}</h2>
         <p class="participants">Participants: ${(participantsSort != null && participantsSort.replace(" ", "") != "") ? participantsSort : "Only solo"}</p>
         <div class="tracks">
             <h3 class="tracks-title">Tracks:</h3>
@@ -45,6 +48,12 @@ function createItem(band, index) {
 const block = document.createElement('main');
 block.classList.add('content');
 
+const title = document.createElement('h1');
+title.classList.add('title');
+const heading_text = document.createTextNode("Music bands");
+title.appendChild(heading_text);
+document.body.appendChild(title);
+
 block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>');
 document.body.appendChild(block);
 
@@ -63,6 +72,11 @@ styles.innerHTML = `
         font-size: 24px;
     }
 
+    h1 {
+        text-align: center;
+        font-size: 48px;
+    }
+
     h2 {
         font-size: 36px;
     }
@@ -79,7 +93,7 @@ styles.innerHTML = `
     }
 
     body {
-        height: 2800px;
+        height: 2900px;
         background-color: #ffffef
     }
 
@@ -117,10 +131,19 @@ styles.innerHTML = `
         justify-content: space-between;
     }
 
-    .logo {
+    .cover {
         border-radius: 3px;
         width: 400px; 
         height: 400px; 
+        background-color: white;
+    }
+
+
+    .logo {
+        border-radius: 3px;
+        width: 400px; 
+        height: 400px;
+        z-index: 2; 
     }
 
     .second {
@@ -137,9 +160,70 @@ styles.innerHTML = `
         list-style: url(https://img.icons8.com/?size=15&id=apInxpMsS4Iq&format=png&color=000000);
     }
 
+    @media(min-width: 1920px) {
+        p {
+            font-size: 28px;
+        }
+    
+        h1 {
+            font-size: 56px;
+        }
+    
+        h2 {
+            font-size: 48px;
+        }
+    
+        h3 {
+            font-size: 36px;
+        }
+    
+        body {
+            height: 3300px;
+        }
+    
+        main {
+            width: 100%; 
+            height: 3200px;
+        }
+    
+        .band-info {
+            height: 620px;
+            border-radius: 15px;
+        }
+    
+        .band-info:hover {
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+        }
+    
+        .first {
+            width: 500px;
+            height: 560px;
+        }
+    
+        .cover {
+            border-radius: 8px;
+            width: 500px; 
+            height: 500px; 
+        }
+    
+    
+        .logo {
+            border-radius: 8px;
+            width: 500px; 
+            height: 500px;
+        }
+    
+        .second {
+            height: 560px;
+        }
+    
+        .tracks-list {
+            list-style: url(https://img.icons8.com/?size=25&id=apInxpMsS4Iq&format=png&color=000000);
+        }
+    }
+
     @media(max-width: 1200px) {
         p {
-            font-weight: 400;
             font-size: 18px;
         }
     
@@ -152,7 +236,7 @@ styles.innerHTML = `
         }
     
         body {
-            height: 2500px;
+            height: 2600px;
         }
     
         main {
@@ -174,7 +258,7 @@ styles.innerHTML = `
             height: 360px;
         }
     
-        .logo {
+        .logo, .cover {
             width: 300px; 
             height: 300px; 
         }
@@ -187,12 +271,11 @@ styles.innerHTML = `
 
     @media(max-width: 768px) {
         p {
-            font-weight: 400;
             font-size: 16px;
         }
 
         body {
-            height: 2300px;
+            height: 2400px;
         }
     
         main {
@@ -208,8 +291,8 @@ styles.innerHTML = `
             width: 250px;
             height: 320px;
         }
-    
-        .logo {
+
+        .logo, .cover {
             width: 250px; 
             height: 250px; 
         }
@@ -217,7 +300,7 @@ styles.innerHTML = `
 
     @media(max-width: 600px) {
         body {
-            height: 5200px;
+            height: 5300px;
         }
     
         main {
@@ -241,7 +324,7 @@ styles.innerHTML = `
             display: flex;
         }
     
-        .logo {
+        .logo, .cover {
             width: 400px; 
             height: 400px; 
         }
@@ -254,7 +337,6 @@ styles.innerHTML = `
 
     @media(max-width: 450px) {
         p {
-            font-weight: 400;
             font-size: 14px;
         }
     
@@ -267,7 +349,7 @@ styles.innerHTML = `
         }
     
         body {
-            height: 3700px;
+            height: 3800px;
         }
     
         main {
@@ -285,8 +367,8 @@ styles.innerHTML = `
             height: 350px;
             display: flex;
         }
-    
-        .logo {
+
+        .logo, .cover{
             width: 240px; 
             height: 240px; 
         }

@@ -17,14 +17,22 @@ function elOrder(band, isFirstFirst) {
     </div>
     `;
     let participantsSort = band.participants.filter(name => name != band.soloist && name.replace(" ", "") != "").join(', ');
-    let trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.replace(" ", "") != "" && item.duration != 0 && item.duration.constructor === Number);
+    let trueTracks = 0;
+    let tracksList = 0;
+    if (band.tracks != null && band.tracks.length !== 0 && band.tracks.constructor === Array) {
+        trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.replace(" ", "") != "" && item.duration != 0 && item.duration.constructor === Number);
+        tracksList = trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('');
+    }
+    else {
+        tracksList = `<p class="item-text">No tracks</p>`;
+    }
     let second = `
     <div class="second">
         <h2 class="soloist name">Soloist: ${band.soloist != null && band.soloist.replace(" ", "") != "" ? band.soloist : "No data"}</h2>
         <p class="participants">Participants: ${(participantsSort != null && participantsSort.replace(" ", "") != "") ? participantsSort : "Only solo"}</p>
         <div class="tracks">
             <h3 class="tracks-title">Tracks:</h3>
-            <ul class="tracks-list">${trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('')}</ul>
+            <ul class="tracks-list">${tracksList}</ul>
         </div>
     </div>
     `;

@@ -56,10 +56,22 @@ function showBandWindow() {
     const text = `
         <h2>Band data</h2>
         <form>
-            <label><p>Enter band name: </p></label>
-            <label><p>Enter soloist name: </p></label>
-            <label><p>Enter participants list with commas: </p></label>
-            <label><p>Add icon: </p></label>
+            <label>
+                <p>Band name</p>
+                <input type="text" name="Band name" id="track-duration-type" placeholder="Enter band name">
+            </label>
+            <label>
+                <p>Soloist</p>
+                <input type="text" name="Soloist" id="track-duration-type" placeholder="Enter soloist name">
+            </label>
+            <label>
+                <p>Participants</p>
+                <input type="text" name="Participants" id="track-duration-type" placeholder="Enter participants list with commas">
+            </label>
+            <label>
+                <p>Icon</p>
+                <input type="file" name="Icon" id="track-duration-type" placeholder="Add icon">
+            </label>
             <p>You'll add tracks later</p>
             <input type="submit" value="Submit" id="submit-1">
         </form>
@@ -73,11 +85,11 @@ function showTrackWindow() {
         <form>
             <label>
                 <p>Track name</p>
-                <input type="text" name="Track name" id="track-name-type" placeholder="Enter track name: ">
+                <input type="text" name="Track name" id="track-name-type" placeholder="Enter track name">
             </label>
             <label>
                 <p>Track duration</p>
-                <input type="text" name="Track duration" id="track-duration-type" placeholder="Enter track duration: ">
+                <input type="text" name="Track duration" id="track-duration-type" placeholder="Enter track duration">
             </label>
             <input type="submit" value="Submit" id="submit-2">
         </form>
@@ -139,35 +151,34 @@ function createItem(band, index) {
     `;
 }
 
+function createElement1(type, class1, text1) {
+    const el = document.createElement(type);
+    el.classList.add(class1);
+    el.appendChild(document.createTextNode(text1));
+    document.body.appendChild(el);
+}
+
+function createButton(class1, text1, isTrack, object1) {
+    const button = document.createElement("button");
+    button.classList.add(class1);
+
+    button.onclick = isTrack ? showTrackWindow : showBandWindow;
+
+    button.appendChild(document.createTextNode(text1));
+    object1.appendChild(button);
+}
+
 const block = document.createElement('main');
 block.classList.add('content');
 
-const title = document.createElement('h1');
-title.classList.add('title');
-const heading_text = document.createTextNode("Music bands");
-title.appendChild(heading_text);
-document.body.appendChild(title);
+const title = createElement1('h1', 'title', 'Music bands');
 
 block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>');
 
 document.body.appendChild(block);
 
-const addButton = document.createElement('button');
-addButton.classList.add('add-band-btn');
-
-addButton.onclick = showBandWindow;
-
-const heading_text1 = document.createTextNode("Add band");
-addButton.appendChild(heading_text1);
-document.body.appendChild(addButton);
+const addButton = createButton('add-band-btn', 'Add band', false, document.body);
 
 data.forEach((band)=>{
-    const button = document.createElement("button");
-    const heading_text = document.createTextNode("Add track");
-    button.classList.add('add-track-btn');
-
-    button.onclick = showTrackWindow;
-
-    button.appendChild(heading_text);
-    document.getElementById(`tracks-${band.id}`).appendChild(button);
+    createButton('add-track-btn', 'Add track', true, document.getElementById(`tracks-${band.id}`));
 });

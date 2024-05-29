@@ -2,9 +2,99 @@ const responce = await fetch('../json/n_bands.json');
 const bands = await responce.json();
 const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
 
+
+class modalWindow{
+    #modal=document.createElement('div');
+    #modal_parent=document.createElement('div');
+    #modal_block=document.createElement('div');
+    #modal_close=document.createElement('div');
+    #modal_body=document.createElement('div');
+    constructor(text){
+      this.#modal.appendChild(this.#modal_parent);
+      this.#modal.appendChild(this.#modal_block);
+      this.#modal_block.appendChild(this.#modal_close);
+      this.#modal_block.appendChild(this.#modal_body);
+      
+      this.#modal_parent.onclick=this.#modal_close.onclick=this.close.bind(this);
+      this.#modal_parent.style='position:fixed;top:0;left:0;with:100%;height:100%;min-height:'+document.documentElement.scrollWidth+'px;min-width:'+document.documentElement.scrollWidth+'px;opacity:0.55;background-color:black;z-index:90;';
+      this.#modal_close.innerHTML='&#10006;';
+      this.#modal_close.style='padding:0;position:absolute;width: 20px;height:20px;right:5px;cursor:pointer;font-size:15px;line-height:0;font:20px Arial;text-align:center;text-shadow: 0px 0px 4px black;';
+      this.#modal_block.style='width:96%;max-width:650px;min-height:80px;position: fixed;top:50%;left:50%;transform: translate(-50%, -50%);background-color:white;box-shadow: 0px 0px 12px 0px black;z-index:99;';
+      this.#modal_body.style='padding:2%;overflow-y:auto;';
+      if(text)this.#modal_body.innerText=text;
+    }
+    get innerText(){
+      return this.#modal_body.innerText;
+    }
+    set innerText(value){
+      this.#modal_body.innerText=value;
+    }
+    get innerHTML(){
+      return this.#modal_body.innerHTML;
+    }
+    set innerHTML(value){
+      this.#modal_body.innerHTML=value;
+    }
+    show(){
+      document.body.appendChild(this.#modal);
+    //анімація
+    this.#modal_block.animate([{opacity:0},
+   {opacity:1}],500);
+    }
+    close(){
+      document.body.removeChild(this.#modal);
+    }
+  }
+
+function showWindow(innerHTML) {
+    var m=new modalWindow('Enter your data');
+    m.innerHTML = innerHTML;
+    m.show();  
+}
+
+function showBandWindow() {
+    const text = `
+        <h2>Band data</h2>
+        <form>
+            <label><p>Enter band name: </p></label>
+            <label><p>Enter soloist name: </p></label>
+            <label><p>Enter participants list with commas: </p></label>
+            <label><p>Add icon: </p></label>
+            <p>You'll add tracks later</p>
+            <input type="submit" value="Submit" id="submit-1">
+        </form>
+    `
+    showWindow(text);
+}
+
+function showTrackWindow() {
+    const text = `
+        <h2>Track data</h2>
+        <form>
+            <label>
+                <p>Track name</p>
+                <input type="text" name="Track name" id="track-name-type" placeholder="Enter track name: ">
+            </label>
+            <label>
+                <p>Track duration</p>
+                <input type="text" name="Track duration" id="track-duration-type" placeholder="Enter track duration: ">
+            </label>
+            <input type="submit" value="Submit" id="submit-2">
+        </form>
+    `
+
+    showWindow(text);
+}
+  
+  
 function minSec(sec) {
     let secFormula = sec-Math.floor(sec/60)*60;
     return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} sec`}`;
+}
+
+function createCloseButton(id) {
+    const button = `<button class="close-button" id="close-button-${id}" onclick="document.getElementById('band-info-${id}').style.display = 'none';">X</button>`;
+    return button;
 }
 
 function elOrder(band, isFirstFirst) {
@@ -30,25 +120,21 @@ function elOrder(band, isFirstFirst) {
     <div class="second">
         <h2 class="soloist name">Soloist: ${band.soloist != null && band.soloist.replace(" ", "") != "" ? band.soloist : "No data"}</h2>
         <p class="participants">Participants: ${(participantsSort != null && participantsSort.replace(" ", "") != "") ? participantsSort : "Only solo"}</p>
-        <div class="tracks">
+        <div class="tracks" id="tracks-${band.id}">
             <h3 class="tracks-title">Tracks:</h3>
-            <ul class="tracks-list">${tracksList}</ul>
+            <ul class="tracks-list" id="tracks-list-${band.id}">${tracksList}</ul>
         </div>
     </div>
     `;
     
-    if (isFirstFirst) {
-        return `${first}${second}`;
-    }
-    else {
-        return `${second}${first}`;
-    }
+    return isFirstFirst ? `${first}${second}` : `${second}${first}`;
 }
 
 function createItem(band, index) {
     return `
-    <div class="band-info">
+    <div class="band-info" id="band-info-${band.id}">
         ${elOrder(band, (index % 2 == 0 ? true : false))}
+        ${createCloseButton(band.id)}
     </div>
     `;
 }
@@ -63,323 +149,25 @@ title.appendChild(heading_text);
 document.body.appendChild(title);
 
 block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>');
+
 document.body.appendChild(block);
 
-const styles = document.createElement('style');
-styles.classList.add('style');
+const addButton = document.createElement('button');
+addButton.classList.add('add-band-btn');
 
-styles.innerHTML = `
-    * {
-        margin: 0;
-        box-sizing: border-box;
-        font-family: "Montserrat", sans-serif;
-    }
+addButton.onclick = showBandWindow;
 
-    p {
-        font-weight: 400;
-        font-size: 24px;
-    }
+const heading_text1 = document.createTextNode("Add band");
+addButton.appendChild(heading_text1);
+document.body.appendChild(addButton);
 
-    h1 {
-        text-align: center;
-        font-size: 48px;
-    }
+data.forEach((band)=>{
+    const button = document.createElement("button");
+    const heading_text = document.createTextNode("Add track");
+    button.classList.add('add-track-btn');
 
-    h2 {
-        font-size: 36px;
-    }
+    button.onclick = showTrackWindow;
 
-    h3 {
-        font-size: 28px;
-    }
-  
-    a {
-        text-decoration: none;
-        color: inherit;
-        transition: 0.2s;
-        cursor: pointer;
-    }
-
-    body {
-        height: 2900px;
-        background-color: #ffffef
-    }
-
-    main {
-        width: 100%; 
-        height: 2800px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-    }
-
-    .band-info {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        width: 90%;
-        height: 520px;
-        background: linear-gradient(to bottom, rgba(189,195,199,1) 20%, rgba(150,166,179,1) 69%, rgba(135,158,181,1) 100%);
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-
-    .band-info:hover {
-        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .first {
-        width: 400px;
-        height: 460px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .cover {
-        border-radius: 3px;
-        width: 400px; 
-        height: 400px; 
-        background-color: white;
-    }
-
-
-    .logo {
-        border-radius: 3px;
-        width: 400px; 
-        height: 400px;
-        z-index: 2; 
-    }
-
-    .second {
-        width: 60%;
-        height: 460px;
-    }
-
-    .tracks {
-        position: relative;
-        top: 40px;
-    }
-
-    .tracks-list {
-        list-style: url(https://img.icons8.com/?size=15&id=apInxpMsS4Iq&format=png&color=000000);
-    }
-
-    @media(min-width: 1920px) {
-        p {
-            font-size: 28px;
-        }
-    
-        h1 {
-            font-size: 56px;
-        }
-    
-        h2 {
-            font-size: 48px;
-        }
-    
-        h3 {
-            font-size: 36px;
-        }
-    
-        body {
-            height: 3300px;
-        }
-    
-        main {
-            width: 100%; 
-            height: 3200px;
-        }
-    
-        .band-info {
-            height: 620px;
-            border-radius: 15px;
-        }
-    
-        .band-info:hover {
-            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
-        }
-    
-        .first {
-            width: 500px;
-            height: 560px;
-        }
-    
-        .cover {
-            border-radius: 8px;
-            width: 500px; 
-            height: 500px; 
-        }
-    
-    
-        .logo {
-            border-radius: 8px;
-            width: 500px; 
-            height: 500px;
-        }
-    
-        .second {
-            height: 560px;
-        }
-    
-        .tracks-list {
-            list-style: url(https://img.icons8.com/?size=25&id=apInxpMsS4Iq&format=png&color=000000);
-        }
-    }
-
-    @media(max-width: 1200px) {
-        p {
-            font-size: 18px;
-        }
-    
-        h2 {
-            font-size: 24px;
-        }
-    
-        h3 {
-            font-size: 20px;
-        }
-    
-        body {
-            height: 2600px;
-        }
-    
-        main {
-            height: 2500px;
-        }
-    
-        .band-info {
-            width: 90%;
-            height: 400px;
-            padding: 10px;
-        }
-    
-        .band-info:focus {
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-        }
-    
-        .first {
-            width: 300px;
-            height: 360px;
-        }
-    
-        .logo, .cover {
-            width: 300px; 
-            height: 300px; 
-        }
-    
-        .second {
-            width: 60%;
-            height: 360px;
-        }
-    }
-
-    @media(max-width: 768px) {
-        p {
-            font-size: 16px;
-        }
-
-        body {
-            height: 2400px;
-        }
-    
-        main {
-            height: 2300px;
-        }
-    
-        .band-info {
-            width: 90%;
-            height: 400px;
-        }
-
-        .first {
-            width: 250px;
-            height: 320px;
-        }
-
-        .logo, .cover {
-            width: 250px; 
-            height: 250px; 
-        }
-    }
-
-    @media(max-width: 600px) {
-        body {
-            height: 5300px;
-        }
-    
-        main {
-            height: 5200px;
-        }
-    
-        .band-info {
-            width: 90%;
-            height: 950px;
-            flex-direction: column;
-        }
-
-        .band-info:nth-of-type(even) {
-            background-color: #000;
-            flex-direction: column-reverse;
-        }
-    
-        .first {
-            width: 400px;
-            height: 460px;
-            display: flex;
-        }
-    
-        .logo, .cover {
-            width: 400px; 
-            height: 400px; 
-        }
-    
-        .second {
-            width: 90%;
-            height: 350px;
-        }
-    }
-
-    @media(max-width: 450px) {
-        p {
-            font-size: 14px;
-        }
-    
-        h2 {
-            font-size: 24px;
-        }
-    
-        h3 {
-            font-size: 20px;
-        }
-    
-        body {
-            height: 3800px;
-        }
-    
-        main {
-            height: 3700px;
-        }
-    
-        .band-info {
-            width: 90%;
-            height: 700px;
-            flex-direction: column;
-        }
-    
-        .first {
-            width: 270px;
-            height: 350px;
-            display: flex;
-        }
-
-        .logo, .cover{
-            width: 240px; 
-            height: 240px; 
-        }
-    }
-`;
-document.body.appendChild(styles);
+    button.appendChild(heading_text);
+    document.getElementById(`tracks-${band.id}`).appendChild(button);
+});

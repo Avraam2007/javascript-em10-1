@@ -118,6 +118,7 @@ main {
     border-radius: 5px;
     border: 3px solid #656565;
     background: linear-gradient(to bottom, #ffeeee, #ddefbb);
+    transition: 1s;
 }
 
 .second {
@@ -173,12 +174,12 @@ main {
     }
 
     body {
-        height: 3300px;
+        max-height: 10000px;
     }
 
     main {
         width: 100%; 
-        height: 3200px;
+        max-height: 9800px;
     }
 
     .band-info {
@@ -209,9 +210,9 @@ main {
     }
 
     .close-button {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
     }
     
     .add-track-btn {
@@ -234,6 +235,31 @@ main {
     .tracks-list {
         list-style: url(https://img.icons8.com/?size=25&id=apInxpMsS4Iq&format=png&color=000000);
     }
+
+    .labels {
+        margin-top: 30px;
+    }
+    
+    .forms {
+        min-height: 200px;
+    }
+    
+    .submit {
+        display: block;
+        margin-top: 25px;
+        width: 200px;
+        height: 50px;
+        font-size: 24px;
+        border-radius: 5px;
+        border: 2px solid black;
+    }
+    
+    .inputs {
+        width: 500px;
+        height: 50px;
+        font-size: 24px;
+        border: 2px solid black;
+    }
 }
 
 @media(max-width: 1200px) {
@@ -250,16 +276,16 @@ main {
     }
 
     body {
-        height: 2600px;
+        min-height: 400px;
     }
 
     main {
-        height: 2500px;
+        min-height: 200px;
     }
 
     .band-info {
         width: 90%;
-        height: 400px;
+        min-height: 400px;
         padding: 10px;
     }
 
@@ -269,7 +295,7 @@ main {
 
     .first {
         width: 300px;
-        height: 360px;
+        min-height: 360px;
     }
 
     .logo, .cover {
@@ -279,21 +305,25 @@ main {
 
     .second {
         width: 60%;
-        height: 360px;
+        min-height: 360px;
+    }
+
+    .close-button {
+        top: -165px;
     }
 }
 
 @media(max-width: 768px) {
     p {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     body {
-        height: 2400px;
+        max-height: 2400px;
     }
 
     main {
-        height: 2300px;
+        max-height: 2300px;
     }
 
     .band-info {
@@ -310,20 +340,24 @@ main {
         width: 250px; 
         height: 250px; 
     }
+
+    .second {
+        width: 55%;
+    }
 }
 
 @media(max-width: 600px) {
     body {
-        height: 5300px;
+        max-height: 5300px;
     }
 
     main {
-        height: 5200px;
+        max-height: 5200px;
     }
 
     .band-info {
         width: 90%;
-        height: 950px;
+        min-height: 850px;
         flex-direction: column;
     }
 
@@ -334,7 +368,7 @@ main {
 
     .first {
         width: 400px;
-        height: 460px;
+        min-height: 460px;
         display: flex;
     }
 
@@ -346,6 +380,10 @@ main {
     .second {
         width: 90%;
         height: 350px;
+    }
+
+    .close-button {
+        position: static;
     }
 }
 
@@ -363,22 +401,22 @@ main {
     }
 
     body {
-        height: 3800px;
+        max-height: 4000px;
     }
 
     main {
-        height: 3700px;
+        max-height: 3900px;
     }
 
     .band-info {
         width: 90%;
-        height: 700px;
+        min-height: 750px;
         flex-direction: column;
     }
 
     .first {
         width: 270px;
-        height: 350px;
+        min-height: 250px;
         display: flex;
     }
 

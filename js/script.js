@@ -63,31 +63,42 @@ function showWindow(innerHTML) {
     m.show();  
 }
 
-function showBandWindow() {
+function showBandWindow(last_id) {
     const text = `
         <h2>Band data</h2>
         <form id="form-2">
             <label for="">
                 <p class="labels">Band name</p>
-                <input type="text" name="Band name" id="band-name-type" placeholder="Enter band name" class="inputs">
+                <input type="text" name="Band name" id="band-name-type" placeholder="Enter band name" class="inputs" required>
             </label>
             <label for="">
                 <p class="labels">Soloist</p>
-                <input type="text" name="Soloist" id="soloist-type" placeholder="Enter soloist name" class="inputs">
+                <input type="text" name="Soloist" id="soloist-type" placeholder="Enter soloist name" class="inputs" required>
             </label>
             <label for="">
                 <p class="labels">Participants</p>
-                <input type="text" name="Participants" id="participants-type" placeholder="Enter participants list with commas" class="inputs">
+                <input type="text" name="Participants" id="participants-type" placeholder="Enter participants list with commas" class="inputs" required>
             </label>
             <label for="">
                 <p class="labels">Icon</p>
-                <input type="file" name="Icon" id="icon-type" placeholder="Add icon" class="inputs">
+                <input type="text" name="Icon" id="icon-type" placeholder="Add icon link" class="inputs" required>
             </label>
             <p class="labels">You'll add tracks later</p>
             <input type="submit" value="Submit" class="submit" id="submit-1">
         </form>
     `
     showWindow(text);
+
+    const form = document.getElementById('form-2');
+    form.onsubmit = () => {
+        const newBand = {
+            id: last_id++,
+            soloist: document.getElementById(`soloist-type`).value,
+            participants: document.getElementById(`participants-type`).value,
+            icon: document.getElementById(`icon-type`).value,
+        };
+        return false;
+    }; 
 }
 
 function showTrackWindow(id) {

@@ -98,7 +98,7 @@ function showBandWindow(last_id) {
         e.preventDefault();
         const newParticipants = document.getElementById(`participants-type`).value.split(', ');
         const newBand = {
-            id: last_id++,
+            id: lastId+1,
             soloist: document.getElementById(`soloist-type`).value,
             bandName: document.getElementById(`band-name-type`).value,
             icon: document.getElementById(`icon-type`).value,
@@ -107,9 +107,9 @@ function showBandWindow(last_id) {
         };
         data.push(newBand);
 
-        document.getElementById('content').innerHTML += createItem(newBand, last_id);
+        document.getElementById('content').innerHTML += createItem(newBand, lastId);
 
-        createElement1('button', 'add-track-btn', 'Add track', document.getElementById(`tracks-${newBand.id}`), true, true, newBand.id);
+        createElement1('button', 'add-track-btn', 'Add track', document.getElementById(`tracks-${lastId+1}`), true, true, lastId+1);
         lastId++;
         return false;
     }; 
@@ -173,11 +173,8 @@ function elOrder(band, isFirstFirst) {
         trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.trim() != "" && item.duration != 0 && item.duration.constructor === Number);
         tracksList = trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('');
     }
-    else if (band.id > 23) {
-        tracksList = ``;
-    }
     else {
-        tracksList = `<p class="item-text">No tracks</p>`;
+        tracksList = `<p class="item-text">Click "Add track" button to add tracks info</p>`;
     }
     let second = `
     <div class="second">

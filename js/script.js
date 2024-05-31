@@ -1,7 +1,7 @@
 // Ніяк не хоче працювати require, як клас JSON. До речі, Ви запрошені на колаборацію в моєму репозиторії
 // const fs = require('fs');
 // const responce = await fetch(fs.existsSync('../json/cache.json') ? '../json/cache.json' : '../json/n_bands.json');
-import { getFormText2, getFormText1 } from "./text_base.js";
+import { getFormText2, getFormText1, createCloseButton } from "./text_base.js";
 const responce = await fetch('../json/n_bands.json');
 const bands = await responce.json();
 const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
@@ -114,11 +114,6 @@ function showTrackWindow(id1) {
 function minSec(sec) {
     let secFormula = sec-Math.floor(sec/60)*60;
     return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} sec`}`;
-}
-
-function createCloseButton(id) {
-    const button = `<button class="close-button" id="close-button-${id}" onclick="document.getElementById('band-info-${id}').style.display = 'none';return false"><b>X</b></button>`;
-    return button;
 }
 
 function elOrder(band, isFirstFirst) {

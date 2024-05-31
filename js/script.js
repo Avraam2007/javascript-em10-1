@@ -1,11 +1,10 @@
 // Ніяк не хоче працювати require, як клас JSON. До речі, Ви запрошені на колаборацію в моєму репозиторії
 // const fs = require('fs');
 // const responce = await fetch(fs.existsSync('../json/cache.json') ? '../json/cache.json' : '../json/n_bands.json');
-import { getFormText2, getFormText1, createCloseButton } from "./text_base.js";
+import { getFormText2, getFormText1, createCloseButton, getLi } from "./text_base.js";
 const responce = await fetch('../json/n_bands.json');
 const bands = await responce.json();
 const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
-let lastId = 0;
 
 
 class modalWindow{
@@ -104,7 +103,7 @@ function showTrackWindow(id1) {
         e.preventDefault();
         const trackName = document.getElementById(`track-name-type`).value.trim();
         const trackDuration = isNaN(parseInt(document.getElementById(`track-duration-type`).value)) ? 0 : Math.floor(document.getElementById(`track-duration-type`).value);
-        document.getElementById(`tracks-list-${id1}`).innerHTML += `<li class="track-item"><p class="item-text">${(trackName != null && trackName.trim() != "") ? trackName : "None"} — ${minSec(trackDuration)}</p></li>`;
+        document.getElementById(`tracks-list-${id1}`).innerHTML += getLi((trackName != null && trackName.trim() != "") ? trackName : "None", minSec(trackDuration));
 
         return false;
     }; 
@@ -112,8 +111,7 @@ function showTrackWindow(id1) {
   
   
 function minSec(sec) {
-    let secFormula = sec-Math.floor(sec/60)*60;
-    return `${Math.floor(sec/60)} min ${secFormula == 0 ? '' : `${secFormula} sec`}`;
+    return sec < 0 ? `Negative time` : `${Math.floor(sec/60)} min ${sec%60 == 0 ? '' : `${sec%60} sec`}`;
 }
 
 function elOrder(band, isFirstFirst) {
@@ -130,7 +128,7 @@ function elOrder(band, isFirstFirst) {
     let tracksList = 0;
     if (band.tracks != null && band.tracks.length !== 0 && band.tracks.constructor === Array) {
         trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.trim() != "" && item.duration != 0 && item.duration.constructor === Number);
-        tracksList = trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('');
+        tracksList = trueTracks.map(item => getLi(item.name, minSec(item.duration))).join('');
     }
     else {
         tracksList = `<p class="item-text">Click "Add track" button to add tracks info</p>`;
@@ -168,7 +166,7 @@ block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>'
 
 document.body.appendChild(block);
 
-lastId = data[data.length - 1].id;
+let lastId = data[data.length - 1].id;
 createElement1('button', 'add-band-btn', 'Add band', document.body, true, false, lastId);
 
 data.forEach((band)=>{

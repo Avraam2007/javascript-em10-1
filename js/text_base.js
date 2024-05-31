@@ -57,3 +57,7 @@ export function createCloseButton(id) {
     const button = `<button class="close-button" id="close-button-${id}" onclick="document.getElementById('band-info-${id}').style.display = 'none';return false"><b>X</b></button>`;
     return button;
 }
+
+export function getLi(name, duration) {
+    return `<li class="track-item"><p class="item-text">${name} — ${duration}</p></li>`;
+}

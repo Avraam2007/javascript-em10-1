@@ -7,7 +7,7 @@ let formText1 = `
     </label>
     <label for="track-duration-type">
         <p class="labels">Track duration</p>
-        <input type="text" name="track-duration" class="inputs" id="track-duration-type" placeholder="Enter track duration in seconds" required>
+        <input type="number" name="track-duration" class="inputs" id="track-duration-type" placeholder="Enter track duration in seconds" required>
     </label>
     <label for="submit-2">
         <input type="submit" value="Submit" class="submit" id="submit-2">

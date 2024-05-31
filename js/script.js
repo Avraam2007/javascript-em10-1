@@ -1,6 +1,10 @@
+// Ніяк не хоче працювати require, як клас JSON. До речі, Ви запрошені на колаборацію в моєму репозиторії
+// const fs = require('fs');
+// const responce = await fetch(fs.existsSync('../json/cache.json') ? '../json/cache.json' : '../json/n_bands.json');
 const responce = await fetch('../json/n_bands.json');
 const bands = await responce.json();
 const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
+let lastId = 0;
 
 
 class modalWindow{
@@ -51,7 +55,7 @@ function createElement1(type, class1, text1, object1, isButton, isTrack, id) {
     el.classList.add(class1);
 
     if(isButton)
-        el.onclick = isTrack ? () => showTrackWindow(id) : showBandWindow;
+        el.onclick = isTrack ? () => showTrackWindow(id) : () => showBandWindow(id);
 
     el.appendChild(document.createTextNode(text1));
     object1.appendChild(el);
@@ -67,19 +71,19 @@ function showBandWindow(last_id) {
     const text = `
         <h2>Band data</h2>
         <form id="form-2">
-            <label for="">
+            <label for="band-name-type">
                 <p class="labels">Band name</p>
                 <input type="text" name="Band name" id="band-name-type" placeholder="Enter band name" class="inputs" required>
             </label>
-            <label for="">
+            <label for="soloist-type">
                 <p class="labels">Soloist</p>
                 <input type="text" name="Soloist" id="soloist-type" placeholder="Enter soloist name" class="inputs" required>
             </label>
-            <label for="">
+            <label for="participants-type">
                 <p class="labels">Participants</p>
                 <input type="text" name="Participants" id="participants-type" placeholder="Enter participants list with commas" class="inputs" required>
             </label>
-            <label for="">
+            <label for="icon-type">
                 <p class="labels">Icon</p>
                 <input type="text" name="Icon" id="icon-type" placeholder="Add icon link" class="inputs" required>
             </label>
@@ -90,18 +94,28 @@ function showBandWindow(last_id) {
     showWindow(text);
 
     const form = document.getElementById('form-2');
-    form.onsubmit = () => {
+    form.onsubmit = e => {
+        e.preventDefault();
+        const newParticipants = document.getElementById(`participants-type`).value.split(', ');
         const newBand = {
             id: last_id++,
             soloist: document.getElementById(`soloist-type`).value,
-            participants: document.getElementById(`participants-type`).value,
+            bandName: document.getElementById(`band-name-type`).value,
             icon: document.getElementById(`icon-type`).value,
+            participants: newParticipants,
+            tracks: 0
         };
+        data.push(newBand);
+
+        document.getElementById('content').innerHTML += createItem(newBand, last_id);
+
+        createElement1('button', 'add-track-btn', 'Add track', document.getElementById(`tracks-${newBand.id}`), true, true, newBand.id);
+        lastId++;
         return false;
     }; 
 }
 
-function showTrackWindow(id) {
+function showTrackWindow(id1) {
     const text = `
         <h2>Track data</h2>
         <form class="forms" id="form-1">
@@ -122,10 +136,12 @@ function showTrackWindow(id) {
     showWindow(text);
 
     const form = document.getElementById('form-1');
-    form.onsubmit = () => {
+    form.onsubmit = (e) => {
+        e.preventDefault();
         const trackName = document.getElementById(`track-name-type`).value.trim();
         const trackDuration = isNaN(parseInt(document.getElementById(`track-duration-type`).value)) ? 0 : Math.floor(document.getElementById(`track-duration-type`).value);
-        document.getElementById(`tracks-list-${id}`).innerHTML += `<li class="track-item"><p class="item-text">${(trackName != null && trackName.trim() != "") ? trackName : "None"} — ${minSec(trackDuration)}</p></li>`;
+        document.getElementById(`tracks-list-${id1}`).innerHTML += `<li class="track-item"><p class="item-text">${(trackName != null && trackName.trim() != "") ? trackName : "None"} — ${minSec(trackDuration)}</p></li>`;
+
         return false;
     }; 
 }
@@ -137,7 +153,7 @@ function minSec(sec) {
 }
 
 function createCloseButton(id) {
-    const button = `<button class="close-button" id="close-button-${id}" onclick="document.getElementById('band-info-${id}').style.display = 'none';"><b>X</b></button>`;
+    const button = `<button class="close-button" id="close-button-${id}" onclick="document.getElementById('band-info-${id}').style.display = 'none';return false"><b>X</b></button>`;
     return button;
 }
 
@@ -145,7 +161,7 @@ function elOrder(band, isFirstFirst) {
     let first = `
     <div class="first">
         <div class="cover">
-            <div class="logo" style="background: url(${band.icon != '' ? band.icon : `https://placehold.co/400?text=${band.bandName.replace(" ", "+")}`}); background-size: 100%; background-position: center; background-repeat: no-repeat;"></div>
+            <div class="logo" style="background: url(${band.icon.trim() != '' && band.icon.startsWith("https://") ? band.icon : `https://placehold.co/400?text=${band.bandName.replace(" ", "+")}`}); background-size: 100%; background-position: center; background-repeat: no-repeat;"></div>
         </div>
         <h2 class="band-name" style="text-align:center;">${band.bandName != null && band.bandName.trim() != "" ? band.bandName : "No data"}</h2>
     </div>
@@ -156,6 +172,9 @@ function elOrder(band, isFirstFirst) {
     if (band.tracks != null && band.tracks.length !== 0 && band.tracks.constructor === Array) {
         trueTracks = band.tracks.filter(item => Object.keys(item).length !== 0 && item != null && item.name.trim() != "" && item.duration != 0 && item.duration.constructor === Number);
         tracksList = trueTracks.map(item => `<li class="track-item"><p class="item-text">${item.name} — ${minSec(item.duration)}</p></li>`).join('');
+    }
+    else if (band.id > 23) {
+        tracksList = ``;
     }
     else {
         tracksList = `<p class="item-text">No tracks</p>`;
@@ -185,6 +204,7 @@ function createItem(band, index) {
 
 const block = document.createElement('main');
 block.classList.add('content');
+block.setAttribute("id", "content");
 
 createElement1('h1', 'title', 'Music bands', document.body);
 
@@ -192,7 +212,8 @@ block.innerHTML = data.map((band, index) => createItem(band, index)).join('<br>'
 
 document.body.appendChild(block);
 
-createElement1('button', 'add-band-btn', 'Add band', document.body, true, false);
+lastId = data[data.length - 1].id;
+createElement1('button', 'add-band-btn', 'Add band', document.body, true, false, lastId);
 
 data.forEach((band)=>{
     createElement1('button', 'add-track-btn', 'Add track', document.getElementById(`tracks-${band.id}`), true, true, band.id);

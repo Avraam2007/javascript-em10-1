@@ -325,11 +325,11 @@ main {
     }
 
     body {
-        max-height: 2400px;
+        max-height: 10000px;
     }
 
     main {
-        max-height: 2300px;
+        max-height: 99000px;
     }
 
     .band-info {
@@ -354,16 +354,16 @@ main {
 
 @media(max-width: 600px) {
     body {
-        max-height: 5300px;
+        max-height: 10000px;
     }
 
     main {
-        max-height: 5200px;
+        max-height: 9900px;
     }
 
     .band-info {
         width: 90%;
-        min-height: 850px;
+        min-height: 900px;
         flex-direction: column;
     }
 
@@ -390,6 +390,9 @@ main {
 
     .close-button {
         position: static;
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
     }
 }
 
@@ -407,11 +410,11 @@ main {
     }
 
     body {
-        max-height: 4000px;
+        max-height: 10000px;
     }
 
     main {
-        max-height: 3900px;
+        max-height: 9900px;
     }
 
     .band-info {
@@ -429,11 +432,5 @@ main {
     .logo, .cover{
         width: 240px; 
         height: 240px; 
-    }
-
-    .close-button {
-        width: 15px;
-        height: 15px;
-        font-size: 10px;
     }
 }

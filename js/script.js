@@ -1,6 +1,7 @@
 // Ніяк не хоче працювати require, як клас JSON. До речі, Ви запрошені на колаборацію в моєму репозиторії
 // const fs = require('fs');
 // const responce = await fetch(fs.existsSync('../json/cache.json') ? '../json/cache.json' : '../json/n_bands.json');
+import { getFormText2, getFormText1 } from "./text_base.js";
 const responce = await fetch('../json/n_bands.json');
 const bands = await responce.json();
 const data = bands.filter(item => Object.keys(item).length !== 0 && item != null && item.constructor === Object);
@@ -55,7 +56,7 @@ function createElement1(type, class1, text1, object1, isButton, isTrack, id) {
     el.classList.add(class1);
 
     if(isButton)
-        el.onclick = isTrack ? () => showTrackWindow(id) : () => showBandWindow(id);
+        el.onclick = isTrack ? () => showTrackWindow(id) : showBandWindow;
 
     el.appendChild(document.createTextNode(text1));
     object1.appendChild(el);
@@ -67,30 +68,8 @@ function showWindow(innerHTML) {
     m.show();  
 }
 
-function showBandWindow(last_id) {
-    const text = `
-        <h2>Band data</h2>
-        <form id="form-2">
-            <label for="band-name-type">
-                <p class="labels">Band name</p>
-                <input type="text" name="Band name" id="band-name-type" placeholder="Enter band name" class="inputs" required>
-            </label>
-            <label for="soloist-type">
-                <p class="labels">Soloist</p>
-                <input type="text" name="Soloist" id="soloist-type" placeholder="Enter soloist name" class="inputs" required>
-            </label>
-            <label for="participants-type">
-                <p class="labels">Participants</p>
-                <input type="text" name="Participants" id="participants-type" placeholder="Enter participants list with commas" class="inputs" required>
-            </label>
-            <label for="icon-type">
-                <p class="labels">Icon</p>
-                <input type="text" name="Icon" id="icon-type" placeholder="Add icon link" class="inputs" required>
-            </label>
-            <p class="labels">You'll add tracks later</p>
-            <input type="submit" value="Submit" class="submit" id="submit-1">
-        </form>
-    `
+function showBandWindow() {
+    const text = getFormText2();
     showWindow(text);
 
     const form = document.getElementById('form-2');
@@ -116,22 +95,7 @@ function showBandWindow(last_id) {
 }
 
 function showTrackWindow(id1) {
-    const text = `
-        <h2>Track data</h2>
-        <form class="forms" id="form-1">
-            <label for="track-name-type">
-                <p class="labels">Track name</p>
-                <input type="text" name="track-name" class="inputs" id="track-name-type" placeholder="Enter track name" required>
-            </label>
-            <label for="track-duration-type">
-                <p class="labels">Track duration</p>
-                <input type="text" name="track-duration" class="inputs" id="track-duration-type" placeholder="Enter track duration in seconds" required>
-            </label>
-            <label for="submit-2">
-                <input type="submit" value="Submit" class="submit" id="submit-2">
-            </label>
-        </form>
-    `;
+    const text = getFormText1();
 
     showWindow(text);
 

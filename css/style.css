@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    color: white;
+}
+
+p {
+    font-weight: 400;
+    font-size: 22px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 48px;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 28px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 0 10px;
+    background: url("https://store-images.s-microsoft.com/image/apps.756.13879366447690213.ff0dcdf1-af01-4af7-b105-db57cef9cb67.f2db4bb3-e1b0-4b73-a1b9-95d7e73c78ea?h=576");
+    background-position: center;
+    background-size: cover;
+}
+
+.title {
+    text-align: center;
+}
+
+.form-box {
+    width: 400px;
+    height: 650px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: rgba(65, 65, 65, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.inputs {
+    width: 300px;
+    height: 40px;
+    font-size: 18px;
+    color: black;
+    border: 2px solid #e10087;
+    border-radius: 20px;
+    padding-left: 20px;
+}
+
+.inputs:invalid, textarea:invalid {
+    border: 2px solid red;
+}
+
+.submit {
+    display: block;
+    color: black;
+    width: 200px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 10px auto;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s ease-out;
+}
+
+textarea {
+    width: 300px;
+    resize: none;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+}
+  
+@media (max-width: 450px) {
+    h1 {
+        text-align: center;
+        font-size: 28px;
+    }
+    
+    h2 {
+        font-size: 28px;
+    }
+    
+    h3 {
+        font-size: 20px;
+    }
+
+    body {
+        min-height: 100vh;
+        width: 100%;
+    }
+    
+    .form-box {
+        width: 300px;
+        height: 650px;
+        padding: 2px;
+        border-radius: 5px;
+        background-color: rgba(65, 65, 65, 0.2);
+        backdrop-filter: blur(8px);
+        border: 1px solid whitesmoke;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    .inputs {
+        width: 220px;
+        height: 40px;
+        font-size: 16px;
+        color: black;
+        border: 2px solid #e10087;
+        border-radius: 20px;
+        padding-left: 20px;
+    }
+    
+    .inputs:invalid, textarea:invalid {
+        border: 2px solid red;
+    }
+    
+    .submit {
+        display: block;
+        color: black;
+        width: 200px;
+        height: 40px;
+        border-radius: 20px;
+        margin: 10px auto;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s ease-out;
+    }
+    
+    textarea {
+        width: 220px;
+        resize: none;
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+    }   
+}

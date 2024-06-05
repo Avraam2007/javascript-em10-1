@@ -1,0 +1,11 @@
+[
+    {
+        "id": 1,
+        "first_name": "Test",
+        "last_name": "Teston",
+        "email": "example@google.com",
+        "phone_number": "+380010000000",
+        "desc": "Some description",
+        "password": "123DDDooo---"
+      }
+]

@@ -1,4 +1,6 @@
-import { getData, getFormText, setData } from "./text_base.js";
+import { getData, getFormText, setData, appendData, getBigData, getBigDataElement, getDataEmail, getDataPhone } from "./text_base.js";
+import { saveStateToLocalStorage } from "./data.js";
+import { showLoginWindow } from "./login.js";
 
 function checkPhoneNumber(number) {
     const numPattern = /^[\+]?[(]?[3][8][)]?[-\s\.\(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2}[-\s\.]?[0-9]{2}$/.test(number);
@@ -9,12 +11,17 @@ function checkVoid(value, minlength) {
     return value.trim().length >= minlength ? true : false;
 }
 
-function getValue(id) {
+export function getValue(id) {
     return document.getElementById(id).value;
 }
 
+function getNewId() {
+    let id1 = getBigDataElement(getBigData().length-1).id;
+    id1 += 1;
+    return id1;
+}
+
 function checkForm() {
-    // console.log(checkPhoneNumber(getValue('phone-number-type')));
     if(!(checkVoid(getValue('first-name-type'), 2) && checkVoid(getValue('last-name-type'), 2) && checkVoid(getValue('description-type'), 11))) {
         alert('Error: empty value');
     }
@@ -22,8 +29,14 @@ function checkForm() {
         alert('Error: invaild type of phone number')
     }
     else {
-        setData(getValue('first-name-type'), getValue('last-name-type'), getValue('email-type'), getValue('phone-number-type'), getValue('description-type'), getValue('password-type'));
-        console.log(getData());
+        if ((getBigData().find((item)=>item.email == getValue('email-type')) == undefined) && (getBigData().find((item)=>item.phone_number == getValue('phone-number-type')) == undefined)) {
+            setData(getValue('first-name-type'), getValue('last-name-type'), getValue('email-type'), getValue('phone-number-type'), getValue('description-type'), getValue('password-type'), getNewId());
+            appendData(getData());
+            saveStateToLocalStorage(getBigData());
+        }
+        else{
+            alert("This account had already created");
+        }
     }
 }
 
@@ -44,3 +57,10 @@ document.getElementById('form').onsubmit = e => {
     checkForm();
     return false;
 }
+
+const button = createBlock('button', 'login-button', 'login', block);
+button.innerText = 'Log in';
+button.onclick = e => {
+    e.preventDefault();
+    showLoginWindow();
+};

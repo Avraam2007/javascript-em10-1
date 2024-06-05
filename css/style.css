@@ -30,7 +30,8 @@ a {
     cursor: pointer;
 }
 
-body {
+.content {
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,6 +43,28 @@ body {
     background-size: cover;
 }
 
+.login-button {
+    width: 200px;
+    height: 40px;
+    resize: none;
+    margin-top: 10px;
+    text-align: center;
+    background-color: rgba(65, 65, 65, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 18px;
+    border: 1px solid whitesmoke;
+    position: absolute;
+    top: -0.001em;
+    right: 1em;
+    transition: 0.5s ease;
+}
+
+.login-button:hover {
+    background-color: rgba(245, 245, 245, 0.2);
+}
+
 .title {
     text-align: center;
 }
@@ -50,7 +73,7 @@ body {
     width: 400px;
     height: 650px;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: rgba(65, 65, 65, 0.2);
     backdrop-filter: blur(8px);
     border: 1px solid whitesmoke;
@@ -100,6 +123,29 @@ textarea {
     padding: 10px;
     border-radius: 10px;
 }
+
+.login {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(65, 65, 65, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid whitesmoke;
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .login-button {
+        position: inherit;
+        margin: 20px auto;
+    }
+}
   
 @media (max-width: 450px) {
     h1 {
@@ -115,9 +161,11 @@ textarea {
         font-size: 20px;
     }
 
-    body {
-        min-height: 100vh;
-        width: 100%;
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
     }
     
     .form-box {

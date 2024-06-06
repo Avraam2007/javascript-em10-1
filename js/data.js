@@ -1,4 +1,4 @@
-// Code base was made by SnIpErZ (Саша)
+// Codebase was made by SnIpErZ
 
 export async function loadAccount() {
 	try {

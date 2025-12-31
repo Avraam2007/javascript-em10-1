@@ -29,7 +29,7 @@
 	"id": 3,
 	"soloist": "James Alan Hetfield",
 	"bandName": "Metallica",
-	"icon": "https://seeklogo.com/images/M/Metallica-logo-42A3DC5618-seeklogo.com.png",
+	"icon": "https://cdn.freebiesupply.com/logos/large/2x/metallica-4-logo-png-transparent.png",
 	"participants": ["Kirk Lee Hammett", "James Alan Hetfield", "Roberto Agustín Miguel Santiago Samuel Trujillo Veracruz", "Lars Ulrich"],
 	"tracks": [
 	   {
@@ -101,7 +101,7 @@
 		"id": 23,
 		"soloist": "Francis Albert Sinatra",
 		"bandName": "Frank Sinatra",
-		"icon": "https://seeklogo.com/images/F/frank-sinatra-logo-0D50EC75D0-seeklogo.com.png",
+		"icon": "",
 		"participants": ["Francis Albert Sinatra", "", "", ""],
 		"tracks": [
 		  {
